@@ -1,0 +1,37 @@
+{% extends 'app_gestao/base.html' %}
+
+<!-- titulo da guia na página do navegador -->
+{% block titulo %}
+  <title>Home</title>
+{% endblock %}
+
+
+{% block conteudo %}
+  <h3><p class="text-center">SISTEMA GERENCIADOR PARA CONTROLE DE HORÁRIO</p></h3>
+   
+  <div class="container">
+    <p class="text-justify">
+      <strong>OBJETIVO:</strong> Gerenciar o horário de entrada dos estudantes que chegam após o fechamento dos portões.<br>
+      <strong>USUÁRIOS:</strong> Este sistema deve ser utilizado pelo setor da secretaria e equipe de gestão.
+    </p>
+
+    <h6><p class="text-start">FUNCIONALIDADES:</p></h6>
+    <p class="text-left">
+      <ul>
+        <li><strong>Cadastrar Turmas:</strong> As turmas são carregadas no sistema utilizando arquivos .xlsx.<br>
+          <strong>ATENÇÃO!</strong> o arquivo .xlsx deve conter 7 colunas, nomeadas EXATAMENTE como descritas abaixo.</li>
+          <ul>
+            <li>R.A.</li>
+            <li>Nome do estudante</li>
+            <li>Série/turma</li>
+            <li>Endereço</li>
+            <li>Responsável 1</li>
+            <li>Responsável 2</li>
+            <li>Contato(s)</li>
+          </ul>
+        <li><strong>Registrar Presença:</strong> Nesta guia são registradas as presenças dos alunos.</li>
+        <li><strong>Registrar Atrasos:</strong> Nesta guia são registrados os atrasos dos alunos que chegaram após o fechamento dos portões.</li>
+        <li><strong>Relatório de Atrasos:</strong> Apresenta o relatório com a relação de atrasos de cada aluno por turma.</li>
+      </ul>
+  </div>
+{% endblock %}
