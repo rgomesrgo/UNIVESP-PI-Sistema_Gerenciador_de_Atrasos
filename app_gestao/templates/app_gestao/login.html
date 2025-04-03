@@ -6,24 +6,33 @@
 {% endblock %}
 
 
+
 {% block conteudo %} 
-  <div class="d-flex flex-column vh-100 align-items-center justify-content-center">
-    <div class="text-center mb-4">
-        <h3>SISTEMA GERENCIADOR PARA CONTROLE DE HORÁRIO</h3>
+  <!-- Define um espaçamento para centralizar o formulário -->
+  <style>.mt-6 {margin-top: 8rem;}</style>
+  <!-- Navbar com título centralizado -->
+  <nav style="background-color: darksalmon !important;" class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid d-flex justify-content-center">
+      <span class="navbar-brand mb-0 h1">SISTEMA GERENCIADOR PARA CONTROLE DE HORÁRIO</span>
     </div>
-    <div class="card p-4 shadow-lg" style="width: 300px;">
-        <h2 class="text-center mb-4">Login</h2>
-        {% if form.errors %}
-            <div class="alert alert-danger">Nome de usuário ou senha inválidos.</div>
-        {% endif %}
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="d-grid mt-3">
-                <button class="btn btn-primary" type="submit">Login</button>
-            </div>
-        </form>
+  </nav>
+  <div class="mt-6"></div>
+  <!-- Formulário centralizado no meio da tela -->
+  <div class="d-flex flex-column min-vh-75">
+    <div class="d-flex flex-grow-1 align-items-center justify-content-center">
+        <div class="card p-4 shadow-lg" style="width: 300px;">
+            <h2 class="text-center mb-4">Login</h2>
+            {% if form.errors %}
+                <div class="alert alert-danger">Nome de usuário ou senha inválidos.</div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-grid mt-3">
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </div>
+            </form>
+        </div>
     </div>
   </div>
 {% endblock %}
-
