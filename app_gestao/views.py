@@ -6,9 +6,7 @@ from datetime import date, datetime
 from django.utils import timezone
 import pandas as pd
 
-# Create your views here.
-
-
+# direciona para a home
 def home(request):
     return render(request, "app_gestao/home.html")
 

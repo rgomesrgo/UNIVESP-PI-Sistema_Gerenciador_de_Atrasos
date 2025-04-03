@@ -1,0 +1,29 @@
+{% extends 'app_gestao/base.html' %}
+
+<!-- titulo da guia na página do navegador -->
+{% block titulo %}
+  <title>Home</title>
+{% endblock %}
+
+
+{% block conteudo %} 
+  <div class="d-flex flex-column vh-100 align-items-center justify-content-center">
+    <div class="text-center mb-4">
+        <h3>SISTEMA GERENCIADOR PARA CONTROLE DE HORÁRIO</h3>
+    </div>
+    <div class="card p-4 shadow-lg" style="width: 300px;">
+        <h2 class="text-center mb-4">Login</h2>
+        {% if form.errors %}
+            <div class="alert alert-danger">Nome de usuário ou senha inválidos.</div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-grid mt-3">
+                <button class="btn btn-primary" type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+  </div>
+{% endblock %}
+
