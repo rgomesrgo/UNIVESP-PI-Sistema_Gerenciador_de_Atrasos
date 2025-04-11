@@ -99,7 +99,8 @@ celerybeat-schedule.*
 *.sage.py 
 
 # Environments 
-.env 
+# .env ignorado durante a fase de testes
+#.env 
 .venv 
 env/ 
 venv/ 

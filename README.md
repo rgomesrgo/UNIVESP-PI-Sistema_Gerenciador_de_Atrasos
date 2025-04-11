@@ -11,6 +11,8 @@ Ementa da disciplina Projeto Integrador em Computação I: Este projeto envolve 
 **Ementa:** Resolução de problemas; Levantamento de requisitos; Desenvolvimento web com framework; HTML; CSS; Banco de Dados; Controle de Versão
 
 ### Grupo:
+BRENO ARAUJO DOS SANTOS
+
 CARLOS DE OLIVEIRA RODRIGUES
 
 DANIELA DE PROENCA MIAO
@@ -45,6 +47,9 @@ ROBSON DOS SANTOS PIMENTA MARTINS
 4. Na interface haverá necessidade de um campo para que os usuários relatem os detalhes na ocorrência.
 5. Após uma determinada quantidade de ocorrência (3 ocorrências semanal ou maior que 50% mensal em relação a frequência do estudante), o sistema apresentará a situação em que cada estudante se encontra em relação às ocorrências na forma de matriz (linhas e colunas), separada por turmas, após análise da situação o usuário (equipe de gestão) terá a opção de gerar um relatório automático que poderá ser utilizado para possíveis medidas cabíveis.
 
+### Bibliotecas:
+* utilize o arquivo "requirements.txt" para instalar as bibliotecas necessárias
+ 
 ### Métodos e Instrumentos:
 * Linguagem de Programação: Python
 * Framework Web: Django
