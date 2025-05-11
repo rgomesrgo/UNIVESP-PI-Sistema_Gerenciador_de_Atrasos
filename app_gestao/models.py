@@ -3,7 +3,7 @@ from django.db import models
 
 # tabela com os dados de cadastro dos alunos
 class CadastroAlunos(models.Model):
-    ra = models.CharField(max_length=10, primary_key=True)
+    ra = models.CharField(max_length=10, primary_key=True, unique=True)
     nome_estudante = models.CharField(max_length=255)
     serie_turma = models.CharField(max_length=5)
     endereco = models.CharField(max_length=255)
@@ -12,8 +12,8 @@ class CadastroAlunos(models.Model):
     contato = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.nome_estudante
-
+        #return self.nome_estudante
+        return f"{self.nome_estudante} ({self.serie_turma})"
 
 # tabela para registro dos atrasos
 class RegAtrasos(models.Model):
@@ -27,6 +27,12 @@ class RegAtrasos(models.Model):
 
 
 # tabela para registro da presença dos alunos
+class Presenca(models.Model):
+    aluno = models.ForeignKey(CadastroAlunos, on_delete=models.CASCADE)
+    data = models.DateField()
+    presente = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = ('aluno', 'data')
 
 

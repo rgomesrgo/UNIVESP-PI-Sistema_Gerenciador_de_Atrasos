@@ -1,0 +1,61 @@
+{% extends 'app_gestao/base.html' %}
+
+<!-- titulo da guia na página do navegador -->
+{% block titulo %}
+  <title>Registrar Atrasos</title>
+{% endblock %}
+
+{% block conteudo %}
+    <h3><p class="text-center"><br>Registrar Atraso de Aluno</p></h3>
+    <div class="container mt-5">
+        
+
+        <!-- Exibição de Mensagens -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="POST">
+            {% csrf_token %}           
+
+            {% if aluno %}
+            <!-- Campo oculto para manter o RA encontrado -->
+            <input type="hidden" name="ra" value="{{ ra }}">
+            
+            <div class="mt-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h5>Dados do Aluno:</h5>
+                            <p>R.A.: {{ aluno.ra }}</p>
+                            <p>Nome: {{ aluno.nome_estudante }}</p>
+                            <p>Série/Turma: {{ aluno.serie_turma }}</p>
+                            <p>Responsável 1: {{ aluno.responsavel1 }}</p>
+                            <p>Responsável 2: {{ aluno.responsavel2 }}</p>
+                            <p>Contato: {{ aluno.contato }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="data_atraso" class="form-label">Data do Atraso</label>
+                        <input type="date" name="data_atraso" class="form-control" required>
+
+                        <label for="horario_chegada" class="form-label">Horário de Chegada</label>
+                        <input type="time" name="horario_chegada" class="form-control" required>
+                   
+                        <label for="justificativa" class="form-label">Justificativa</label>
+                        <textarea name="justificativa" class="form-control" maxlength="255" rows="3"></textarea>
+
+                        <button type="submit" name="salvar" class="btn btn-primary">Salvar</button>
+                    </div>                    
+                </div>
+            </div>
+            {% endif %}
+        </form>       
+        <div class="container mt-5" style="margin-bottom: 100px;"></div>
+    </div>
+{% endblock %}

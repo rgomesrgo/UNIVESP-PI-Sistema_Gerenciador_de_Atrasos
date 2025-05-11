@@ -7,54 +7,73 @@
 
 
 {% block conteudo %}
-  <div class="container">
-      <h3><p class="text-center"><br>Registrar Presença</p></h3>
-      <form method="post">
-          {% csrf_token %}
-          <div class="mb-3">
-              <label for="data" class="form-label">Data da Presença:</label>
-              <input type="date" name="data" class="form-control" id="data">
-          </div>
-          <button type="submit" class="btn btn-primary">Confirmar Data</button>
-      </form>
+    <div class="container mt-5">
+        <h3 class="text-center">Registrar Presença</h3>
 
-      {% if turmas %}
-          <h2>Turmas:</h2>
-          <div class="list-group">
-              {% for turma in turmas %}
-                  <a href="{% url 'alunos_turma' turma=turma %}" class="list-group-item list-group-item-action">{{ turma }}</a>
-              {% endfor %}
-          </div>
-      {% endif %}
+        <!-- Exibição de Mensagens -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
 
-      {% if alunos %}
-          <h2>Alunos da Turma {{ turma_selecionada }}:</h2>
-          <form method="post">
-              {% csrf_token %}
-              <input type="hidden" name="data_presenca" value="{{ data_selecionada }}">
-              <table class="table">
-                  <thead>
-                      <tr>
-                          <th>Nome</th>
-                          <th>Presente</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for aluno in alunos %}
-                          <tr>
-                              <td>{{ aluno.nome_estudante }}</td>
-                              <td>
-                                  <div class="form-check">
-                                      <input class="form-check-input" type="checkbox" name="presenca_{{ aluno.ra }}" value="1" id="presenca_{{ aluno.ra }}" checked>
-                                      <label class="form-check-label" for="presenca_{{ aluno.ra }}">Presente</label>
-                                  </div>
-                              </td>
-                          </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-              <button type="submit" class="btn btn-success">Salvar Presenças</button>
-          </form>
-      {% endif %}
-  </div>
+        <form method="GET" class="mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="data" class="form-label">Data</label>
+                    <input type="date" id="data" name="data" class="form-control" value="{{ data_selecionada }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="turma" class="form-label">Turma</label>
+                    <select name="turma" id="turma" class="form-select" required>
+                        <option value="">Selecione</option>
+                        {% for turma in turmas %}
+                            <option value="{{ turma }}" {% if turma == turma_selecionada %}selected{% endif %}>{{ turma }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Listar Alunos</button>
+                </div>
+            </div>
+        </form>
+
+        {% if alunos %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="data" value="{{ data_selecionada }}">
+            <input type="hidden" name="turma" value="{{ turma_selecionada }}">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>R.A.</th>
+                        <th>Nome</th>
+                        <th>Presença</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>{{ aluno.ra }}</td>
+                        <td>{{ aluno.nome_estudante }}</td>
+                        <td>
+                            <select name="presenca_{{ aluno.ra }}" class="form-select">
+                                <option value="presente" selected>Presente</option>
+                                <option value="ausente">Ausente</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!--<button type="submit" name="registrar" class="btn btn-success">Registrar Presenças</button>-->
+            <div class="text-center mt-4">
+                <button type="submit" name="registrar" class="btn btn-success">Registrar Presença</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
 {% endblock %}
