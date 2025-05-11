@@ -87,3 +87,11 @@ def presenca(request):
 # apresenta o relatório com o atrasos dos alunos de acordo com a turma
 def relatorio(request):
         return render(request, 'app_gestao/relatorio.html')
+
+#Limpa os dados dos bancos de dados
+def limpar_banco(request):
+    if request.method == 'POST':
+        CadastroAlunos.objects.all().delete()
+        RegAtrasos.objects.all().delete()
+        messages.success(request, 'Todos os dados foram apagados com sucesso.')
+    return redirect('cadastro')  # substitua com o nome da sua view
