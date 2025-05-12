@@ -8,7 +8,66 @@
 
 {% block conteudo %}
 
-  <h3><p class="text-center"><br>Relatório de Atrasos</p></h3>
+  <!--<h3><p class="text-center"><br>Relatório de Atrasos</p></h3>-->
+  <div class="container mt-4">
+    <h3 class="text-center">Relatório de Presenças e Atrasos</h3>
 
+    <form method="get" class="row g-3 align-items-end mb-4">
+      <div class="col-md-3">
+          <label for="mes" class="form-label">Mês</label>
+          <select name="mes" id="mes" class="form-select" required>
+            <option value="">Selecione</option>
+            {% for numero, nome in meses %}
+                <option value="{{ numero }}" {% if mes == numero|stringformat:"i" %}selected{% endif %}>
+                    {{ nome }}
+                </option>
+            {% endfor %}
+          </select>
+      </div>
+      <div class="col-md-4">
+          <label for="turma" class="form-label">Turma</label>
+          <select name="turma" id="turma" class="form-select" required>
+              <option value="">Selecione</option>
+              {% for t in turmas %}
+                  <option value="{{ t }}" {% if turma == t %}selected{% endif %}>{{ t }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <div class="col-md-2">
+          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+      </div>
+    </form>
 
+    {% if relatorio %}
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Aluno</th>
+                <th style="width: 10%;">Turma</th>
+                <th style="width: 10%;">Mês</th>
+                <th style="width: 10%;">Presenças</th>
+                <th style="width: 10%;">Atrasos</th>
+                <th style="width: 10%;">% Atraso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in relatorio %}
+            <tr>
+                <td class="{% if item.cor %}table-{{ item.cor }}{% endif %} text-start">{{ item.aluno.nome_estudante }}</td>
+                <td>{{ item.aluno.serie_turma }}</td>
+                <td>{{ nome_mes }}</td>
+                <td>{{ item.presencas }}</td>
+                <td>{{ item.atrasos }}</td>
+                <td>{{ item.percentual }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center">
+      <a href="?mes={{ mes }}&turma={{ turma }}&exportar=1" class="btn btn-success">Exportar para Excel</a>
+    </div>
+    
+    {% endif %}
+  </div>
 {% endblock %}

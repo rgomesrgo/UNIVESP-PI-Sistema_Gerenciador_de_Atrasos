@@ -30,5 +30,6 @@ urlpatterns = [
     path("registrar_atraso/", views.registrar_atraso, name="registrar_atraso"),
     path('registrar_atraso/<str:ra>/', views.registrar_atraso_aluno, name='registrar_atraso_aluno'),
     path("relatorio/", views.relatorio, name="relatorio"),
+    #path('relatorio/exportar/', views.exportar_relatorio_excel, name='exportar_relatorio'),
     path('limpar_banco/', views.limpar_banco, name='limpar_banco'),
 ]

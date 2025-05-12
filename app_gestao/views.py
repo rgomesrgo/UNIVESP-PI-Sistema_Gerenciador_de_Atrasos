@@ -1,10 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Count, Q
 from .models import CadastroAlunos, RegAtrasos, Presenca
 from django.contrib import messages
 from .forms import RegistroAtrasoForm
 from datetime import date, datetime
 from django.utils import timezone
+from django.http import HttpResponse
+import openpyxl
+from openpyxl.styles import PatternFill
 import pandas as pd
+import locale
+import calendar
+
+#windows
+locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
+
 
 # direciona para a home
 def home(request):
@@ -79,10 +89,6 @@ def registrar_presenca(request):
         "turmas": turmas,
     })
 
-# apresenta o relatório com o atrasos dos alunos de acordo com a turma
-def relatorio(request):
-        return render(request, 'app_gestao/relatorio.html')
-
 #Limpa os dados dos bancos de dados
 def limpar_banco(request):
     if request.method == 'POST':
@@ -128,3 +134,89 @@ def registrar_atraso_aluno(request, ra):
         return redirect('registrar_atraso')
 
     return render(request, 'app_gestao/registrar_atraso_aluno.html', {'aluno': aluno})
+
+# apresenta o relatório com o atrasos dos alunos de acordo com a turma
+def relatorio(request):
+    mes = request.GET.get('mes')
+    turma = request.GET.get('turma')
+    exportar = request.GET.get('exportar')
+    relatorio = []
+    nome_mes = None
+
+    meses = [(i, calendar.month_name[i]) for i in range(1, 13)]
+    turmas = CadastroAlunos.objects.values_list('serie_turma', flat=True).distinct()
+
+    if mes and turma:
+        mes = int(mes)
+        alunos = CadastroAlunos.objects.filter(serie_turma=turma)
+        nome_mes = calendar.month_name[int(mes)].capitalize()
+
+        for aluno in alunos:
+            presencas = Presenca.objects.filter(
+                aluno_id=aluno.ra,
+                data__month=mes
+            ).count()
+
+            atrasos = RegAtrasos.objects.filter(
+                ra=aluno.ra,
+                data_atraso__month=mes
+            ).count()
+
+            percentual = round((atrasos / presencas) * 100, 2) if presencas > 0 else 0
+            cor = ''
+            if percentual > 50:
+                cor = 'danger'
+            elif percentual > 0:
+                cor = 'warning'
+
+            relatorio.append({
+                'aluno': aluno,
+                'turma': turma,
+                'mes': nome_mes,
+                'presencas': presencas,
+                'atrasos': atrasos,
+                'percentual': percentual,
+                'cor': cor,
+            })
+
+        if exportar == "1":
+            # Gerar planilha Excel
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "Relatório"
+
+            # Cabeçalhos
+            ws.append(["Aluno", "Turma", "Mes", "Presenças", "Atrasos", "% Atraso"])
+
+            for item in relatorio:
+                row = [
+                    item['aluno'].nome_estudante,
+                    item['turma'],
+                    item['mes'],
+                    item['presencas'],
+                    item['atrasos'],
+                    item['percentual'],
+                ]
+                ws.append(row)
+
+                # Colorir fundo conforme a cor
+                cell = ws.cell(row=ws.max_row, column=1)
+                if item['cor'] == 'danger':
+                    cell.fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
+                elif item['cor'] == 'warning':
+                    cell.fill = PatternFill(start_color="FFFF99", end_color="FFFF99", fill_type="solid")
+
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=relatorio.xlsx'
+            wb.save(response)
+            return response
+
+    context = {
+        'mes': mes,
+        'turma': turma,
+        'meses': meses,
+        'turmas': turmas,
+        'relatorio': relatorio,
+        'nome_mes': nome_mes
+    }
+    return render(request, 'app_gestao/relatorio.html', context)
