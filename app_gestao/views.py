@@ -157,7 +157,8 @@ def relatorio(request):
         for aluno in alunos:
             presencas = Presenca.objects.filter(
                 aluno_id=aluno.ra,
-                data__month=mes
+                data__month=mes,
+                presente=1
             ).count()
 
             atrasos = RegAtrasos.objects.filter(
