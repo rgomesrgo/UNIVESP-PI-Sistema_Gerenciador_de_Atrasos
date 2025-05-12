@@ -1,0 +1,44 @@
+{% extends 'app_gestao/base.html' %}
+
+<!-- titulo da guia na página do navegador -->
+{% block titulo %}
+  <title>Relatório</title>
+{% endblock %}
+
+
+{% block conteudo %}
+  <div class="container mt-4">
+    <h4 class="text-center mb-3">Detalhes de Atrasos</h4>
+    <p><strong>Aluno:</strong> {{ aluno.nome_estudante }}</p>
+    <p><strong>Turma:</strong> {{ turma }}</p>
+    <p><strong>Mês:</strong> {{ mes }}</p>
+
+    {% if atrasos %}
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th style="width: 20%;">Data do Atraso</th>
+            <th style="width: 20%;">Hora de Chegada</th>
+            <th>Justificativa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for atraso in atrasos %}
+          <tr>
+            <td>{{ atraso.data_atraso|date:"d/m/Y" }}</td>
+            <td>{{ atraso.horario_chegada }}</td>
+            <td class="text-start">{{ atraso.justificativa }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert alert-info" role="alert">
+        Não foram registrados atrasos neste mês.
+      </div>
+    {% endif %}
+  </div>
+  <div class="mt-4 text-center">
+    <a href="javascript:history.back()" class="btn btn-secondary">Voltar</a>
+  </div>
+{% endblock %}

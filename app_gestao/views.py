@@ -1,11 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Count, Q
-from .models import CadastroAlunos, RegAtrasos, Presenca
 from django.contrib import messages
-from .forms import RegistroAtrasoForm
-from datetime import date, datetime
-from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import CadastroAlunos, RegAtrasos, Presenca
 import openpyxl
 from openpyxl.styles import PatternFill
 import pandas as pd
@@ -15,12 +12,13 @@ import calendar
 #windows
 locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
 
-
 # direciona para a home
+@login_required
 def home(request):
     return render(request, "app_gestao/home.html")
 
 # realiza o cadastro das turmas, atravez do arquivo .xlsx
+@login_required
 def cadastro(request):
     if request.method == 'POST' and request.FILES['arquivo_xlsx']:
         arquivo_xlsx = request.FILES['arquivo_xlsx']
@@ -56,6 +54,7 @@ def cadastro(request):
     return render(request, 'app_gestao/cadastrar_alunos.html')
 
 # realiza o registro da presença dos alunos
+@login_required
 def registrar_presenca(request):
     data_selecionada = request.POST.get("data") or request.GET.get("data")
     turma_selecionada = request.POST.get("turma") or request.GET.get("turma")
@@ -90,6 +89,7 @@ def registrar_presenca(request):
     })
 
 #Limpa os dados dos bancos de dados
+@login_required
 def limpar_banco(request):
     if request.method == 'POST':
         CadastroAlunos.objects.all().delete()
@@ -99,6 +99,7 @@ def limpar_banco(request):
     return redirect('cadastro')  # substitua com o nome da sua view
 
 #seleciona o aluno para o registro do atraso
+@login_required
 def registrar_atraso(request):
     turmas = CadastroAlunos.objects.values_list('serie_turma', flat=True).distinct()
     alunos = []
@@ -116,6 +117,7 @@ def registrar_atraso(request):
     })
 
 #efetua o registro do atraso do aluno selecionado no banco de dados
+@login_required
 def registrar_atraso_aluno(request, ra):
     aluno = get_object_or_404(CadastroAlunos, ra=ra)
 
@@ -136,6 +138,7 @@ def registrar_atraso_aluno(request, ra):
     return render(request, 'app_gestao/registrar_atraso_aluno.html', {'aluno': aluno})
 
 # apresenta o relatório com o atrasos dos alunos de acordo com a turma
+@login_required
 def relatorio(request):
     mes = request.GET.get('mes')
     turma = request.GET.get('turma')
@@ -188,6 +191,9 @@ def relatorio(request):
             # Cabeçalhos
             ws.append(["Aluno", "Turma", "Mes", "Presenças", "Atrasos", "% Atraso"])
 
+            # Total de colunas do relatório
+            num_colunas = 6
+
             for item in relatorio:
                 row = [
                     item['aluno'].nome_estudante,
@@ -199,12 +205,17 @@ def relatorio(request):
                 ]
                 ws.append(row)
 
-                # Colorir fundo conforme a cor
-                cell = ws.cell(row=ws.max_row, column=1)
+                # Cor da linha inteira conforme a cor do item
                 if item['cor'] == 'danger':
-                    cell.fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
+                    fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
                 elif item['cor'] == 'warning':
-                    cell.fill = PatternFill(start_color="FFFF99", end_color="FFFF99", fill_type="solid")
+                    fill = PatternFill(start_color="FFFF99", end_color="FFFF99", fill_type="solid")
+                else:
+                    fill = None
+
+                if fill:
+                    for col in range(1, num_colunas + 1):
+                        ws.cell(row=ws.max_row, column=col).fill = fill
 
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename=relatorio.xlsx'
@@ -220,3 +231,32 @@ def relatorio(request):
         'nome_mes': nome_mes
     }
     return render(request, 'app_gestao/relatorio.html', context)
+
+#relatório de detalhes de atrasos do aluno
+@login_required
+def detalhes_atrasos(request, ra):
+    mes = request.GET.get('mes')
+    turma = request.GET.get('turma')
+    aluno = get_object_or_404(CadastroAlunos, ra=ra)
+    nome_mes = None
+
+    #meses = [(i, calendar.month_name[i]) for i in range(1, 13)]
+    #turmas = CadastroAlunos.objects.values_list('serie_turma', flat=True).distinct()
+
+    if mes and turma:
+        mes = int(mes)
+        #alunos = CadastroAlunos.objects.filter(serie_turma=turma)
+        nome_mes = calendar.month_name[int(mes)].capitalize()
+
+    atrasos = RegAtrasos.objects.filter(
+        ra=ra,
+        data_atraso__month=mes
+    ).order_by('data_atraso')
+
+    context = {
+        'aluno': aluno,
+        'turma': turma,
+        'mes': nome_mes,
+        'atrasos': atrasos
+    }
+    return render(request, 'app_gestao/detalhes_atrasos.html', context)

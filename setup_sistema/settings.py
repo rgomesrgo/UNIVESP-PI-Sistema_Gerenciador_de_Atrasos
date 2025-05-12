@@ -135,3 +135,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Expira a sessão quando o navegador for fechado
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

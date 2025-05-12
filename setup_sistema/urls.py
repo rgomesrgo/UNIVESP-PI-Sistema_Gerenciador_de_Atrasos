@@ -26,10 +26,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path("home/", views.home, name="home"),
     path("cadastrar_alunos/", views.cadastro, name="cadastro"),
+    path('limpar_banco/', views.limpar_banco, name='limpar_banco'),
     path("registrar_presenca/", views.registrar_presenca, name="registrar_presenca"),
     path("registrar_atraso/", views.registrar_atraso, name="registrar_atraso"),
     path('registrar_atraso/<str:ra>/', views.registrar_atraso_aluno, name='registrar_atraso_aluno'),
     path("relatorio/", views.relatorio, name="relatorio"),
-    #path('relatorio/exportar/', views.exportar_relatorio_excel, name='exportar_relatorio'),
-    path('limpar_banco/', views.limpar_banco, name='limpar_banco'),
+    path('relatorio/atrasos/<str:ra>/', views.detalhes_atrasos, name='detalhes_atrasos'),
 ]

@@ -7,8 +7,6 @@
 
 
 {% block conteudo %}
-
-  <!--<h3><p class="text-center"><br>Relatório de Atrasos</p></h3>-->
   <div class="container mt-4">
     <h3 class="text-center">Relatório de Presenças e Atrasos</h3>
 
@@ -52,13 +50,17 @@
         </thead>
         <tbody>
             {% for item in relatorio %}
-            <tr>
-                <td class="{% if item.cor %}table-{{ item.cor }}{% endif %} text-start">{{ item.aluno.nome_estudante }}</td>
-                <td>{{ item.aluno.serie_turma }}</td>
-                <td>{{ nome_mes }}</td>
-                <td>{{ item.presencas }}</td>
-                <td>{{ item.atrasos }}</td>
-                <td>{{ item.percentual }}%</td>
+            <tr class="{% if item.cor %}table-{{ item.cor }}{% endif %}">
+              <td class="text-start">
+                <a href="{% url 'detalhes_atrasos' item.aluno.ra %}?mes={{ mes }}&turma={{ turma }}" class="text-decoration-none text-dark">
+                  {{ item.aluno.nome_estudante }}
+                </a>
+              </td>
+              <td>{{ item.aluno.serie_turma }}</td>
+              <td>{{ nome_mes }}</td>
+              <td>{{ item.presencas }}</td>
+              <td>{{ item.atrasos }}</td>
+              <td>{{ item.percentual }}%</td>
             </tr>
             {% endfor %}
         </tbody>
