@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CadastroAlunos, RegAtrasos, Presenca
 import openpyxl
@@ -20,38 +20,45 @@ def home(request):
 # realiza o cadastro das turmas, atravez do arquivo .xlsx
 @login_required
 def cadastro(request):
-    if request.method == 'POST' and request.FILES['arquivo_xlsx']:
-        arquivo_xlsx = request.FILES['arquivo_xlsx']
-        try:
-            df = pd.read_excel(arquivo_xlsx)  # Lê o arquivo Excel em um DataFrame
+    #if request.method == 'POST' and request.FILES['arquivo_xlsx']:
+        #arquivo_xlsx = request.FILES['arquivo_xlsx']
+    if request.method == 'POST':
+        arquivo_xlsx = request.FILES.get('arquivo_xlsx')  # usa get() para evitar erro
+        if arquivo_xlsx:
+            try:
+                df = pd.read_excel(arquivo_xlsx)  # Lê o arquivo Excel em um DataFrame
 
-            # Certifica-se de que as colunas do Excel correspondam aos nomes das colunas do banco de dados
-            df.rename(columns={
-                'R.A.': 'ra',
-                'Nome do estudante': 'nome_estudante',
-                'Série/turma': 'serie_turma',
-                'Endereço': 'endereco',
-                'Responsável 1': 'responsavel1',
-                'Responsável 2': 'responsavel2',
-                'Contato(s)': 'contato'
-            }, inplace=True)
-            for index, row in df.iterrows():
-                CadastroAlunos.objects.update_or_create(
-                    ra=row['ra'],
-                    defaults={
-                        'nome_estudante': row['nome_estudante'],
-                        'serie_turma': row['serie_turma'],
-                        'endereco': row['endereco'],
-                        'responsavel1': row['responsavel1'],
-                        'responsavel2': row['responsavel2'],
-                        'contato': row['contato'],
-                    }
-                )
-            messages.success(request, 'Dados importados com sucesso!')
-        except Exception as e:
-            messages.error(request, f'Erro ao importar dados: {e}')   
-        return redirect('cadastro')
-    return render(request, 'app_gestao/cadastrar_alunos.html')
+                # Certifica-se de que as colunas do Excel correspondam aos nomes das colunas do banco de dados
+                df.rename(columns={
+                    'R.A.': 'ra',
+                    'Nome do estudante': 'nome_estudante',
+                    'Série/turma': 'serie_turma',
+                    'Endereço': 'endereco',
+                    'Responsável 1': 'responsavel1',
+                    'Responsável 2': 'responsavel2',
+                    'Contato(s)': 'contato'
+                }, inplace=True)
+                for index, row in df.iterrows():
+                    CadastroAlunos.objects.update_or_create(
+                        ra=row['ra'],
+                        defaults={
+                            'nome_estudante': row['nome_estudante'],
+                            'serie_turma': row['serie_turma'],
+                            'endereco': row['endereco'],
+                            'responsavel1': row['responsavel1'],
+                            'responsavel2': row['responsavel2'],
+                            'contato': row['contato'],
+                        }
+                    )
+                messages.success(request, 'Dados importados com sucesso!')
+            except Exception as e:
+                messages.error(request, f'Erro ao importar dados: {e}')   
+            return redirect('cadastro')
+    
+    # Verifica se o usuário está no grupo 'Administradores'
+    is_admin = request.user.groups.filter(name='Administradores').exists()
+
+    return render(request, 'app_gestao/cadastrar_alunos.html',{'is_admin': is_admin,})
 
 # realiza o registro da presença dos alunos
 @login_required
@@ -91,12 +98,17 @@ def registrar_presenca(request):
 #Limpa os dados dos bancos de dados
 @login_required
 def limpar_banco(request):
+    if not request.user.groups.filter(name='Administradores').exists():
+        return HttpResponseForbidden("Você não tem permissão para fazer isso.")
+    
     if request.method == 'POST':
         CadastroAlunos.objects.all().delete()
         RegAtrasos.objects.all().delete()
         Presenca.objects.all().delete()
         messages.success(request, 'Todos os dados foram apagados com sucesso.')
-    return redirect('cadastro')  # substitua com o nome da sua view
+        return redirect('cadastro')
+
+    return render(request, 'confirmar_limpeza.html')
 
 #seleciona o aluno para o registro do atraso
 @login_required

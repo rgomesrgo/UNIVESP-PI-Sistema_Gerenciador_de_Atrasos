@@ -34,34 +34,37 @@
 
     <!-- Botão para limpar o banco -->
     <div class="text-center" style="margin-top: 10rem;">
-        <label class="form-label">No início do ano letivo DEVE ser efetuada a limpeza do banco de dados, para não ocorrer conflitos de alunos entre as turmas!</label><br>
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmClearModal">
-            Limpar Banco de Dados
-        </button>
+        <label class="form-label">No início do ano letivo, antes de cadastras novas turmas, DEVE ser efetuada a limpeza do banco de dados, SOLICITAR AO ADMINISTRADOR DO SISTEMA!</label><br>
+        {% if is_admin %}
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmClearModal">
+                Limpar Banco de Dados
+            </button>
+        {% endif %}
     </div>
 
     <!-- Modal de Confirmação -->
     <div class="modal fade" id="confirmClearModal" tabindex="-1" aria-labelledby="confirmClearModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmClearModalLabel">Confirmação</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-                Tem certeza que deseja apagar todos os dados do banco de dados? Essa ação não pode ser desfeita!<br>
-                Serão apagados todas as turmas cadastradas e os registros de presença e atraso.<br>
-                Esta ação é recomendada para ser executada no início do ano letivo, eliminando todos os registros do ano anterior.
-            </div>
-            <div class="modal-footer">
-                <form method="post" action="{% url 'limpar_banco' %}">
-                {% csrf_token %}
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-danger">Sim, apagar tudo</button>
-                </form>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmClearModalLabel">Confirmação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja apagar todos os dados do banco de dados? Essa ação não pode ser desfeita!<br>
+                    Serão apagados todas as turmas cadastradas e os registros de presença e atraso.<br>
+                    Esta ação é recomendada para ser executada no início do ano letivo, eliminando todos os registros do ano anterior.
+                </div>                
+                <div class="modal-footer">
+                    <form method="post" action="{% url 'limpar_banco' %}">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Sim, apagar tudo</button>
+                    </form>
+                </div>                
             </div>
         </div>
     </div>
+    
     <div class="container mt-5" style="margin-bottom: 100px;"></div>
 {% endblock %}
