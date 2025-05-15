@@ -4,7 +4,7 @@
 *.pyc
 __pycache__
 media
-#db.sqlite3
+db.sqlite3
 #mantido a base de dados caso ocorra alterações nos testes
 
 # Backup files # 
