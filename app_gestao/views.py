@@ -3,22 +3,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CadastroAlunos, RegAtrasos, Presenca
-from os import name
 import openpyxl
 from openpyxl.styles import PatternFill
 import pandas as pd
-import locale
-import calendar
-
-
-# Windows
-if name == 'nt':
-    locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
- 
-# Mac ou Linux
-else:
-    locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
-
+    
 # direciona para a home
 @login_required
 def home(request):
@@ -27,8 +15,6 @@ def home(request):
 # realiza o cadastro das turmas, atravez do arquivo .xlsx
 @login_required
 def cadastro(request):
-    #if request.method == 'POST' and request.FILES['arquivo_xlsx']:
-        #arquivo_xlsx = request.FILES['arquivo_xlsx']
     if request.method == 'POST':
         arquivo_xlsx = request.FILES.get('arquivo_xlsx')  # usa get() para evitar erro
         if arquivo_xlsx:
@@ -164,14 +150,15 @@ def relatorio(request):
     exportar = request.GET.get('exportar')
     relatorio = []
     nome_mes = None
+    meses_dict={1:'Janeiro',2:'Fevereiro',3:'Março',4:'Abril',5:'Maio',6:'Junho',7:'Julho',8:'Agosto',9:'Setembro',10:'Outubro',11:'Novembro',12:'Dezembro'}
 
-    meses = [(i, calendar.month_name[i]) for i in range(1, 13)]
+    meses = [(i, meses_dict[i]) for i in range(1, 13)]
     turmas = CadastroAlunos.objects.values_list('serie_turma', flat=True).distinct()
 
     if mes and turma:
         mes = int(mes)
         alunos = CadastroAlunos.objects.filter(serie_turma=turma)
-        nome_mes = calendar.month_name[int(mes)].capitalize()
+        nome_mes = meses_dict[mes]
 
         for aluno in alunos:
             presencas = Presenca.objects.filter(
@@ -259,14 +246,11 @@ def detalhes_atrasos(request, ra):
     turma = request.GET.get('turma')
     aluno = get_object_or_404(CadastroAlunos, ra=ra)
     nome_mes = None
-
-    #meses = [(i, calendar.month_name[i]) for i in range(1, 13)]
-    #turmas = CadastroAlunos.objects.values_list('serie_turma', flat=True).distinct()
+    meses_dict={1:'Janeiro',2:'Fevereiro',3:'Março',4:'Abril',5:'Maio',6:'Junho',7:'Julho',8:'Agosto',9:'Setembro',10:'Outubro',11:'Novembro',12:'Dezembro'}
 
     if mes and turma:
         mes = int(mes)
-        #alunos = CadastroAlunos.objects.filter(serie_turma=turma)
-        nome_mes = calendar.month_name[int(mes)].capitalize()
+        nome_mes = meses_dict[mes]
 
     atrasos = RegAtrasos.objects.filter(
         ra=ra,
