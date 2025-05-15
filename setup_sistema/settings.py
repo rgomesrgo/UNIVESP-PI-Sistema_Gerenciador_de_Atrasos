@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from decouple import config, Csv
 from dj_database_url import parse as db_url
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,6 +58,18 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+#para deploy no render
+# Arquivos estáticos (CSS, JavaScript, Imagens)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# WhiteNoise para servir arquivos estáticos no Render
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+# Melhor desempenho ao servir arquivos estáticos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
 ROOT_URLCONF = "setup_sistema.urls"
 
 TEMPLATES = [
@@ -81,6 +94,7 @@ WSGI_APPLICATION = "setup_sistema.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     "default": config(
         "DATABASE_URL",
@@ -88,7 +102,6 @@ DATABASES = {
         cast=db_url,
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -138,3 +151,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Expira a sessão quando o navegador for fechado
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
