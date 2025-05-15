@@ -3,14 +3,21 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CadastroAlunos, RegAtrasos, Presenca
+from os import name
 import openpyxl
 from openpyxl.styles import PatternFill
 import pandas as pd
 import locale
 import calendar
 
-#windows
-locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
+
+# Windows
+if name == 'nt':
+    locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
+ 
+# Mac ou Linux
+else:
+    locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
 
 # direciona para a home
 @login_required
