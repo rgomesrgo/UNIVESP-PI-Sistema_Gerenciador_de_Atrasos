@@ -1,1 +1,1 @@
-web: gunicorn setup_sistema:app
+web: gunicorn setup_sistema.wsgi:application
