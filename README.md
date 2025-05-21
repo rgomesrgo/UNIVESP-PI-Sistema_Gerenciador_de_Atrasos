@@ -1,5 +1,8 @@
 
-<img align="right" src="https://univesp.br/sites/527174b7b24a527adc000002/assets/590b74fb9caf4d3c61001003/Univesp_logo_jpg_rgb.jpg" width="10000"/>
+<div style="text-align: center;">
+  <img src="https://univesp.br/sites/527174b7b24a527adc000002/assets/590b74fb9caf4d3c61001003/Univesp_logo_jpg_rgb.jpg" width="400"/>
+</div>
+
 
 ## Projeto Integrador em Computação I - DRP14 - Turma 002 - Grupo 020
 Ementa da disciplina Projeto Integrador em Computação I: Este projeto envolve todos os alunos de quaisquer trilhas que ainda não fizeram opção por disciplinas específicas. 
@@ -59,4 +62,11 @@ ROBSON DOS SANTOS PIMENTA MARTINS
 * Ambiente de Desenvolvimento Integrado (IDE): Visual Studio Code (VSCode)
 * Sistema de Controle de Versão: Git
 
-### Repositório destinado ao versionamento da aplicação desenvolvida na disciplina de Projeto Integrador I da UNIVESP.
+
+### Apresentação do sistema no YouTube:
+<a href="https://www.youtube.com/watch?v=QbGWYWc5gDA">
+  <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="50" />
+</a>
+
+
+#### Repositório destinado ao versionamento da aplicação desenvolvida na disciplina de Projeto Integrador I da UNIVESP.

@@ -100,7 +100,7 @@ celerybeat-schedule.*
 
 # Environments 
 # .env ignorado durante a fase de testes
-#.env 
+.env 
 .venv 
 env/ 
 venv/ 
@@ -140,6 +140,6 @@ GitHub.sublime-settings
 .history
 
 # Minhas pastas e arquivos
-#Teste/
+Teste/
 user.txt
 render_setup.sh
