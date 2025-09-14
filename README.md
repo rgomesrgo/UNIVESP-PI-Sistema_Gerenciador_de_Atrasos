@@ -4,31 +4,30 @@
 </div>
 
 
-## Projeto Integrador em Computação I - DRP14 - Turma 002 - Grupo 020
-Ementa da disciplina Projeto Integrador em Computação I: Este projeto envolve todos os alunos de quaisquer trilhas que ainda não fizeram opção por disciplinas específicas. 
+## Projeto Integrador em Computação II - DRP14 - Turma 001 - Grupo 007
+**Ementa da disciplina Projeto Integrador em Computação II:** Resolução de problemas. Levantamento de requisitos. Desenvolvimento web com framework. HTML. CSS. Linguagem de script. Banco de Dados. Controle de Versão. Nuvem. API. Acessibilidade. Testes. Análise de dados.
 
 **Carga Horária:** 80 h 
 
-**Objetivo:** Desenvolver um software com framework web que utilize noções de banco de dados, praticando controle de versão 
-
-**Ementa:** Resolução de problemas; Levantamento de requisitos; Desenvolvimento web com framework; HTML; CSS; Banco de Dados; Controle de Versão
+**Objetivo:** Desenvolver um software com framework web que utilize banco de dados, inclua script web (Javascript), nuvem, uso de API, acessibilidade, controle de versão e testes. Opcionalmente, incluir análise de dados.
 
 ### Grupo:
-BRENO ARAUJO DOS SANTOS
+ALFONSO JAIME DE CARVALHO MELO USLAR
 
 CARLOS DE OLIVEIRA RODRIGUES
 
 DANIELA DE PROENCA MIAO
 
-GABRIELA COSTA DA SILVA
+DOUGLAS RODRIGUES SILVA
 
-IGOR DOS SANTOS GOMES
+MARCELO ALMEIDA DE SOUZA
 
 LUCAS MELO DE CHIARA
 
-PAULO HENRIQUE SOARES SALAROLI
+RAFAEL GOMES DE OLIVEIRA
 
 ROBSON DOS SANTOS PIMENTA MARTINS
+
 
 
 ## Autorização de Uso
@@ -37,18 +36,22 @@ ROBSON DOS SANTOS PIMENTA MARTINS
     <img alt="Folk" title="Fork Button" src="https://shields.io/badge/-DAR%20FORK-red.svg?&style=for-the-badge&logo=github&logoColor=white"/></a>
 
 
-## SISTEMA GERENCIADOR PARA CONTROLE DE HORÁRIO
+## SISTEMA DE CONTROLE DE ATRASOS
 
 **OBJETIVO:** Gerenciar o horário de entrada dos estudantes que chegam após o fechamento dos portões.
 
 **USUÁRIOS:** Este sistema será utilizado pelo setor da secretaria e equipe de gestão.
 
 ### Escopo:
-1. O sistema será constituído por banco de dados onde estarão armazenadas as informações dos estudantes como: nome, R.A. (Registro do Aluno), série/turma, endereço, nome dos responsáveis e contatos.
-2. Este banco de dados poderá ser alimentado pelos próprios usuários (secretários(as)), ou seja, eles poderão inserir novos registros e/ou atualizar.
-3. Nele haverá a necessidade de dois tipos de atribuições, que são: registro de frequência e registro das ocorrências em relação aos atrasos. 
-4. Na interface haverá necessidade de um campo para que os usuários relatem os detalhes na ocorrência.
-5. Após uma determinada quantidade de ocorrência (3 ocorrências semanal ou maior que 50% mensal em relação a frequência do estudante), o sistema apresentará a situação em que cada estudante se encontra em relação às ocorrências na forma de matriz (linhas e colunas), separada por turmas, após análise da situação o usuário (equipe de gestão) terá a opção de gerar um relatório automático que poderá ser utilizado para possíveis medidas cabíveis.
+1. O sistema é constituído por banco de dados (PostgreSQL) onde estão armazenadas as informações dos anlunos: nome, R.A. (Registro do Aluno), série/turma, endereço, nome dos responsáveis e contatos.
+2. O sistema não se integra aos sistemas da escola, assim os dados precisam ser carregados via arquivo .xlsx.
+3. São efetuados dois tipos de registros: registro de frequência e registro das ocorrências em relação aos atrasos. 
+4. Especificado a turma do aluno, ao clicar no nome do aluno é habilitado o campo para registro do atraso.
+5. O sistema permite a inclusão/exclusão de alunos.
+6. Por fim, o sistema apresenta um quantificador do total de presenças e atrasos dos alunos, de acordo com a seleção da turma e do mês, a última coluna indica o percentual de atraso, com base nesse percentual são definidas duas regras do negócio:
+•	Se o aluno possuir algum atraso no mês a linha é pintada de amarelo.
+•	Caso o percentual seja superior a 50% a linha fica vermelha.
+7. Um relatório .xlsx com a relação de atrasos e justificativas pode ser extraído do sistema.
 
 ### Bibliotecas:
 * utilize o arquivo "requirements.txt" para instalar as bibliotecas necessárias
@@ -56,7 +59,7 @@ ROBSON DOS SANTOS PIMENTA MARTINS
 ### Métodos e Instrumentos:
 * Linguagem de Programação: Python
 * Framework Web: Django
-* Banco de Dados: SQLite
+* Banco de Dados: PostgreSQL
 * Biblioteca para Leitura de Arquivos Excel: openpyxl e pandas
 * Framework CSS: Bootstrap 5
 * Ambiente de Desenvolvimento Integrado (IDE): Visual Studio Code (VSCode)
@@ -69,4 +72,4 @@ ROBSON DOS SANTOS PIMENTA MARTINS
 </a>
 
 
-#### Repositório destinado ao versionamento da aplicação desenvolvida na disciplina de Projeto Integrador I da UNIVESP.
+#### Repositório destinado ao versionamento da aplicação desenvolvida na disciplina de Projeto Integrador II da UNIVESP.
