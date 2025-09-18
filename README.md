@@ -36,7 +36,7 @@ ROBSON DOS SANTOS PIMENTA MARTINS
     <img alt="Folk" title="Fork Button" src="https://shields.io/badge/-DAR%20FORK-red.svg?&style=for-the-badge&logo=github&logoColor=white"/></a>
 
 
-## SISTEMA DE CONTROLE DE ATRASOS
+## SISTEMA DE CONTROLE DE ATRASOS 2.0
 
 **OBJETIVO:** Gerenciar o horário de entrada dos estudantes que chegam após o fechamento dos portões.
 
@@ -49,8 +49,8 @@ ROBSON DOS SANTOS PIMENTA MARTINS
 4. Especificado a turma do aluno, ao clicar no nome do aluno é habilitado o campo para registro do atraso.
 5. O sistema permite a inclusão/exclusão de alunos.
 6. Por fim, o sistema apresenta um quantificador do total de presenças e atrasos dos alunos, de acordo com a seleção da turma e do mês, a última coluna indica o percentual de atraso, com base nesse percentual são definidas duas regras do negócio:
-•	Se o aluno possuir algum atraso no mês a linha é pintada de amarelo.
-•	Caso o percentual seja superior a 50% a linha fica vermelha.
+* Se o aluno possuir algum atraso no mês a linha é pintada de amarelo.
+* Caso o percentual seja superior a 50% a linha fica vermelha.
 7. Um relatório .xlsx com a relação de atrasos e justificativas pode ser extraído do sistema.
 
 ### Bibliotecas:

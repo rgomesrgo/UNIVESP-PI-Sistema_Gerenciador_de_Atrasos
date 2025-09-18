@@ -32,4 +32,6 @@ urlpatterns = [
     path('registrar_atraso/<str:ra>/', views.registrar_atraso_aluno, name='registrar_atraso_aluno'),
     path("relatorio/", views.relatorio, name="relatorio"),
     path('relatorio/atrasos/<str:ra>/', views.detalhes_atrasos, name='detalhes_atrasos'),
+    path('excluir-aluno/', views.excluir_aluno_view, name='excluir_aluno'),
+    path('confirmar-exclusao/<str:ra>/', views.confirmar_exclusao_view, name='confirmar_exclusao'),
 ]

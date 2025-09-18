@@ -6,7 +6,15 @@ from .models import CadastroAlunos, RegAtrasos, Presenca
 import openpyxl
 from openpyxl.styles import PatternFill
 import pandas as pd
-    
+
+
+# Verifica se o usuário está no grupo 'Administradores'
+@login_required
+def get_admin_group(request):
+    return {
+        'is_admin': request.user.groups.filter(name='Administradores').exists()
+    }
+
 # direciona para a home
 @login_required
 def home(request):
@@ -49,9 +57,9 @@ def cadastro(request):
             return redirect('cadastro')
     
     # Verifica se o usuário está no grupo 'Administradores'
-    is_admin = request.user.groups.filter(name='Administradores').exists()
+    admin_group = get_admin_group(request)
 
-    return render(request, 'app_gestao/cadastrar_alunos.html',{'is_admin': is_admin,})
+    return render(request, 'app_gestao/cadastrar_alunos.html', admin_group)
 
 # realiza o registro da presença dos alunos
 @login_required
@@ -91,7 +99,10 @@ def registrar_presenca(request):
 #Limpa os dados dos bancos de dados
 @login_required
 def limpar_banco(request):
-    if not request.user.groups.filter(name='Administradores').exists():
+    # Verifica se o usuário está no grupo 'Administradores'
+    admin_group = get_admin_group(request)
+
+    if not admin_group:
         return HttpResponseForbidden("Você não tem permissão para fazer isso.")
     
     if request.method == 'POST':
@@ -264,3 +275,30 @@ def detalhes_atrasos(request, ra):
         'atrasos': atrasos
     }
     return render(request, 'app_gestao/detalhes_atrasos.html', context)
+
+#função para excluir aluno na aba Cadastrar Turmas
+@login_required
+def excluir_aluno_view(request):
+    if request.method == 'POST':
+        ra = request.POST.get('ra')
+        try:
+            aluno = CadastroAlunos.objects.get(ra=ra)
+            return redirect('confirmar_exclusao', ra=aluno.ra)
+        except CadastroAlunos.DoesNotExist:
+            messages.warning(request, f"Nenhum aluno encontrado com RA {ra}.")
+    
+    # Verifica se o usuário está no grupo 'Administradores'
+    admin_group = get_admin_group(request)
+    return render(request, 'app_gestao/cadastrar_alunos.html', admin_group)
+
+#confirmação da exclusão do aluno
+@login_required
+def confirmar_exclusao_view(request, ra):
+    aluno = get_object_or_404(CadastroAlunos, ra=ra)
+
+    if request.method == 'POST':
+        aluno.delete()
+        messages.success(request, f"Aluno {aluno.nome_estudante} excluído com sucesso.")
+        return redirect('excluir_aluno')  # Nome da URL correta
+
+    return render(request, 'app_gestao/confirmar_exclusao.html', {'aluno': aluno})

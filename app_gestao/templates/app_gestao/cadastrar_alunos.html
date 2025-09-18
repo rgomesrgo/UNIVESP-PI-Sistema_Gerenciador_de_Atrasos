@@ -32,13 +32,41 @@
         </form>
     </div>
 
+    <!-- Exclusão de alunos -->
+    <div class="container mt-4">
+        <div class="card-body">
+            <form id="form-excluir-aluno" method="POST" action="{% url 'excluir_aluno' %}">
+                {% csrf_token %}
+                <div class="mt-3">
+                    <label for="ra-excluir" class="form-label">
+                        Informe o RA do aluno que deseja excluir do sistema:
+                    </label>
+                </div>
+                <div class="input-group mt-2">
+                    <input type="text" id="ra-excluir" name="ra" class="form-control"
+                        required placeholder="Exemplo: 123456"
+                        aria-label="O aluno com o RA informado será excluído"
+                        aria-describedby="btn-buscar-aluno">
+                    <button type="submit" class="btn btn-danger" id="btn-buscar-aluno">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <!-- Botão para limpar o banco -->
-    <div class="text-center" style="margin-top: 10rem;">
-        <label class="form-label">No início do ano letivo, antes de cadastras novas turmas, DEVE ser efetuada a limpeza do banco de dados, SOLICITAR AO ADMINISTRADOR DO SISTEMA!</label><br>
+    <div class="text-center" style="margin-top: 4rem;">
         {% if is_admin %}
+            <label class="form-label">
+                No início do ano letivo, antes de cadastrar novas turmas, deve efetuar a limpeza do banco de dados:
+            </label><br>
             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmClearModal">
                 Limpar Banco de Dados
             </button>
+        {% else %}
+            <label class="form-label">
+                No início do ano letivo, antes de cadastrar novas turmas, <strong>SOLICITE AO ADMINISTRADOR</strong> a limpeza do banco de dados.
+            </label>
         {% endif %}
     </div>
 
