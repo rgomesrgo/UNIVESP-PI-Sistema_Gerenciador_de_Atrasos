@@ -206,10 +206,8 @@ def relatorio(request):
             ws = wb.active
             ws.title = "Relatório"
 
-            # Cabeçalhos
+            # Cabeçalhos da aba principal
             ws.append(["Aluno", "Turma", "Mes", "Presenças", "Atrasos", "% Atraso"])
-
-            # Total de colunas do relatório
             num_colunas = 6
 
             for item in relatorio:
@@ -223,7 +221,7 @@ def relatorio(request):
                 ]
                 ws.append(row)
 
-                # Cor da linha inteira conforme a cor do item
+                # Colorir linha com base na cor
                 if item['cor'] == 'danger':
                     fill = PatternFill(start_color="FF9999", end_color="FF9999", fill_type="solid")
                 elif item['cor'] == 'warning':
@@ -235,10 +233,30 @@ def relatorio(request):
                     for col in range(1, num_colunas + 1):
                         ws.cell(row=ws.max_row, column=col).fill = fill
 
+            # Segunda aba: Detalhes de Atrasos
+            ws2 = wb.create_sheet(title="Detalhes de Atrasos")
+            ws2.append(["Aluno", "Data", "Hora", "Justificativa"])
+
+            for aluno in alunos:
+                atrasos_detalhados = RegAtrasos.objects.filter(
+                    ra=aluno.ra,
+                    data_atraso__month=mes
+                ).order_by('data_atraso')
+
+                for atraso in atrasos_detalhados:
+                    ws2.append([
+                        aluno.nome_estudante,
+                        atraso.data_atraso.strftime('%d/%m/%Y'),
+                        atraso.horario_chegada.strftime('%H:%M') if atraso.horario_chegada else '',
+                        atraso.justificativa or ''
+                    ])
+
+            # Finalizar a resposta com o arquivo
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename=relatorio.xlsx'
             wb.save(response)
             return response
+
 
     context = {
         'mes': mes,
