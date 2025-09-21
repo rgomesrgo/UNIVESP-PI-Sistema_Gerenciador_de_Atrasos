@@ -69,7 +69,7 @@ def registrar_presenca(request):
     alunos = []
 
     if turma_selecionada:
-        alunos = CadastroAlunos.objects.filter(serie_turma=turma_selecionada)
+        alunos = CadastroAlunos.objects.filter(serie_turma=turma_selecionada).order_by('nome_estudante')
 
     if request.method == "POST" and "registrar" in request.POST:
         for aluno in alunos:
@@ -124,7 +124,7 @@ def registrar_atraso(request):
     if request.method == 'POST':
         turma_selecionada = request.POST.get('turma')
         if turma_selecionada:
-            alunos = CadastroAlunos.objects.filter(serie_turma=turma_selecionada)
+            alunos = CadastroAlunos.objects.filter(serie_turma=turma_selecionada).order_by('nome_estudante')
 
     return render(request, 'app_gestao/registrar_atraso.html', {
         'turmas': turmas,
@@ -168,7 +168,7 @@ def relatorio(request):
 
     if mes and turma:
         mes = int(mes)
-        alunos = CadastroAlunos.objects.filter(serie_turma=turma)
+        alunos = CadastroAlunos.objects.filter(serie_turma=turma).order_by('nome_estudante')
         nome_mes = meses_dict[mes]
 
         for aluno in alunos:
