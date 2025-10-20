@@ -9,6 +9,7 @@ class TemplatesTests(TestCase):
 
     def test_home_view_template(self):
         response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app_gestao/base.html')
 
     def test_home_template_content(self):
