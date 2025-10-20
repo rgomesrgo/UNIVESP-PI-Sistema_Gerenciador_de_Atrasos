@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 from app_gestao.models import CadastroAlunos
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
